@@ -31,10 +31,12 @@ class Channel:
     @classmethod
     def get_service(cls):
         """Возвращающает объект для работы с YouTube API"""
-        return cls.youtube
+        api_key: str = os.getenv('YouTube_API')
+        return build('youtube', 'v3', developerKey=api_key)
 
     def to_json(self, file):
         """Сохраняет в файл значения атрибутов экземпляра `Channel`"""
+        self.file = file
         arrt_values = {'channel_id': self.__channel_id,
                        'title': self.title,
                        'description': self.description,
@@ -42,6 +44,5 @@ class Channel:
                        'subscriberCount': self.subscriberCount,
                        'video_count': self.video_count,
                        'viewCount': self.viewCount}
-        with open(file, 'w', encoding='utf-8') as f:
-            for i in arrt_values:
-                json.dump(i, f)
+        with open(self.file, 'w', encoding='utf-8') as f:
+            json.dump(arrt_values, f, indent = 2, ensure_ascii = False)
